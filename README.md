@@ -18,8 +18,6 @@ npm install @shinabr2/react-material-daterange-picker --save
 yarn add @shinabr2/react-material-daterange-picker
 ```
 
-![Screenshot](/screenshot_1.png?raw=true "Screenshot")
-
 ## Basic Example
 ```tsx
 import React from "react";
