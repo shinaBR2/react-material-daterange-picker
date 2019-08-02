@@ -57,13 +57,25 @@ const DateRangePickerImpl: React.FunctionComponent<DateRangePickerProps> = props
 
 	const minDateValid = parseOptionalDate(minDate, addYears(today, -10));
 	const maxDateValid = parseOptionalDate(maxDate, addYears(today, 10));
+	
+
+	/**
+	 * const { startDate, endDate } = initialDateRange
+	 * 
+	 * If initialDateRange is provided, just return [startDate, endDate]
+	 * Otherwise, get based on min/max value
+	 *
+	 * Example value: [new Date('2017-07-21'), new Date('2018-09-21')]
+	 *
+	 * ==> intialFirstMonth === new Date('2017-07-21')
+	 * ==> initialSecondMonth === new Date('2018-09-21')
+	 */
 	const [intialFirstMonth, initialSecondMonth] = getValidatedMonths(
 		initialDateRange || {},
 		minDateValid,
 		maxDateValid
 	);
 
-	// console.log("rendering DateRangePicker");
 	const [dateRange, setDateRange] = React.useState<DateRange>({ ...initialDateRange });
 	const [hoverDay, setHoverDay] = React.useState<Date>();
 	const [firstMonth, setFirstMonth] = React.useState<Date>(intialFirstMonth || today);
