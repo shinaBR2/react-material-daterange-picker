@@ -36,6 +36,7 @@ interface MenuProps extends WithStyles<typeof styles> {
 	ranges: DefinedRange[];
 	minDate: Date;
 	maxDate: Date;
+	numberOfMonths: number | undefined;
 	firstMonth: Date;
 	secondMonth: Date;
 	setFirstMonth: Setter<Date>;
@@ -58,6 +59,7 @@ const Menu: React.FunctionComponent<MenuProps> = props => {
 		dateRange,
 		minDate,
 		maxDate,
+		numberOfMonths = 1,
 		firstMonth,
 		setFirstMonth,
 		secondMonth,
@@ -90,21 +92,25 @@ const Menu: React.FunctionComponent<MenuProps> = props => {
 					</Grid>
 					<Divider />
 					<Grid container direction="row" justify="center" wrap="nowrap">
-						<Month
-							{...commonProps}
-							value={firstMonth}
-							setValue={setFirstMonth}
-							navState={[true, canNavigateCloser]}
-							marker={MARKERS.FIRST_MONTH}
-						/>
-						<div className={classes.divider} />
-						<Month
-							{...commonProps}
-							value={secondMonth}
-							setValue={setSecondMonth}
-							navState={[canNavigateCloser, true]}
-							marker={MARKERS.SECOND_MONTH}
-						/>
+						{
+							Array.from({length: numberOfMonths}, (v, i) => i + 1).map(m => {
+								const marker = m === 1 ? MARKERS.FIRST_MONTH : (m === numberOfMonths ? MARKERS.SECOND_MONTH : MARKERS.NONE);
+								const showDivider = m < numberOfMonths;
+
+								return (
+									<React.Fragment key={m}>
+										<Month
+											{...commonProps}
+											value={firstMonth}
+											setValue={setFirstMonth}
+											navState={[true, canNavigateCloser]}
+											marker={marker}
+										/>
+										{showDivider && <div className={classes.divider} />}
+									</React.Fragment>
+								);
+							})
+						}
 					</Grid>
 				</Grid>
 				<div className={classes.divider} />

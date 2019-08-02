@@ -19,7 +19,8 @@ type Marker = symbol;
 
 export const MARKERS: { [key: string]: Marker } = {
 	FIRST_MONTH: Symbol("firstMonth"),
-	SECOND_MONTH: Symbol("secondMonth")
+	SECOND_MONTH: Symbol("secondMonth"),
+	NONE: Symbol('none')
 };
 
 const getValidatedMonths = (range: DateRange, minDate: Date, maxDate: Date) => {
@@ -40,6 +41,7 @@ interface DateRangePickerProps {
 	definedRanges?: DefinedRange[];
 	minDate?: Date | string;
 	maxDate?: Date | string;
+	numberOfMonths?: number | undefined;
 	onChange: (dateRange: DateRange) => void;
 }
 
@@ -52,6 +54,7 @@ const DateRangePickerImpl: React.FunctionComponent<DateRangePickerProps> = props
 		initialDateRange,
 		minDate,
 		maxDate,
+		numberOfMonths,
 		definedRanges = defaultRanges
 	} = props;
 
@@ -109,13 +112,26 @@ const DateRangePickerImpl: React.FunctionComponent<DateRangePickerProps> = props
 		setHoverDay(day);
 	};
 
+	/**
+	 * This hanlder will be used when user click on next/prev button
+	 * on the header of month
+	 * We will only show navigator on first and last month
+	 * Incase we show multiple months (for example numberOfMonths === 3),
+	 * we will hide navigator on the other months except first and last month 
+	 * 
+	 * @param  {[Marker]} marker: Marker           [determine what month is focus on]
+	 * @param  {[NavigationAction]} action: NavigationAction [next or prev]
+	 * @return {[void]}
+	 */
 	const onMonthNavigate = (marker: Marker, action: NavigationAction) => {
 		if (marker == MARKERS.FIRST_MONTH) {
 			const firstNew = addMonths(firstMonth, action);
 			if (isBefore(firstNew, secondMonth)) setFirstMonth(firstNew);
-		} else {
+		} else if (marker == MARKERS.SECOND_MONTH) {
 			const secondNew = addMonths(secondMonth, action);
 			if (isBefore(firstMonth, secondNew)) setSecondMonth(secondNew);
+		} else {
+			return;
 		}
 	};
 
@@ -151,6 +167,7 @@ const DateRangePickerImpl: React.FunctionComponent<DateRangePickerProps> = props
 			dateRange={dateRange}
 			minDate={minDateValid}
 			maxDate={maxDateValid}
+			numberOfMonths={numberOfMonths}
 			ranges={definedRanges}
 			firstMonth={firstMonth}
 			secondMonth={secondMonth}
