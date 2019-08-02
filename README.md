@@ -1,11 +1,11 @@
 # react-daterange-picker 
 A react date range picker using material-ui components.
 
-<a href='https://www.npmjs.com/package/@matharumanpreet00/react-daterange-picker'>
-    <img src='https://img.shields.io/npm/v/@matharumanpreet00/react-daterange-picker.svg' alt='Latest npm version'>
+<a href='https://www.npmjs.com/package/@shinabr2/react-material-daterange-picker'>
+    <img src='https://img.shields.io/npm/v/@shinabr2/react-material-daterange-picker?logo=v1.0.0' alt='react-material-daterange-picker npm version'>
 </a>
 
-## Live Demo: https://matharumanpreet00.github.io/react-daterange-picker/
+## Live Demo: https://shinabr2.github.io/react-material-daterange-picker/
 
 
 
@@ -13,9 +13,9 @@ A react date range picker using material-ui components.
 ## Usage
 
 ```bash
-npm install @matharumanpreet00/react-daterange-picker --save
+npm install @shinabr2/react-material-daterange-picker --save
 # or with yarn
-yarn add @matharumanpreet00/react-daterange-picker
+yarn add @shinabr2/react-material-daterange-picker
 ```
 
 ![Screenshot](/screenshot_1.png?raw=true "Screenshot")
@@ -23,7 +23,7 @@ yarn add @matharumanpreet00/react-daterange-picker
 ## Basic Example
 ```tsx
 import React from "react";
-import { DateRangePicker, DateRange } from "@matharumanpreet00/react-daterange-picker";
+import { DateRangePicker, DateRange } from "@shinabr2/react-material-daterange-picker";
 
 type Props = {}
 type State = {
@@ -53,7 +53,7 @@ export default App;
 ## Basic example using hooks
 ```tsx
 import React from "react";
-import { DateRangePicker, DateRange } from "@matharumanpreet00/react-daterange-picker";
+import { DateRangePicker, DateRange } from "@shinabr2/react-material-daterange-picker";
 
 type Props = {}
 
