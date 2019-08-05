@@ -11,6 +11,7 @@
 		"url": "https://github.com/shinabr2/react-material-daterange-picker"
 	},
 	"main": "build/index.js",
+	"types": "build/index.d.ts",
 	"scripts": {
 		"start": "tsc --watch",
 		"build": "tsc",

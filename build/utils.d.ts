@@ -1,6 +1,6 @@
 import { DateRange } from "./types";
 export declare const identity: <T>(x: T) => T;
-export declare const chunks: <T>(array: readonly T[], size: number) => T[][];
+export declare const chunks: <T>(array: ReadonlyArray<T>, size: number) => T[][];
 export declare const combine: (...args: any[]) => string;
 export declare const getDaysInMonth: (date: Date) => Date[];
 export declare const isStartOfRange: ({ startDate }: DateRange, day: Date) => boolean;
