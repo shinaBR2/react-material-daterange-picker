@@ -15,6 +15,7 @@
 	"scripts": {
 		"start": "tsc --watch",
 		"build": "tsc",
+		"prepublishOnly": "tsc -p ./ --outDir build/",
 		"test": "echo \"No test specified\""
 	},
 	"dependencies": {
