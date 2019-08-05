@@ -1,6 +1,6 @@
 {
 	"name": "@shinabr2/react-material-daterange-picker",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "A react date range picker using Material Design",
 	"author": {
 		"email": "ShinaBR2@gmail.com",
