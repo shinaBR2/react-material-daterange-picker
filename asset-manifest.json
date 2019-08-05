@@ -1,13 +1,15 @@
 {
-  "main.css": "/react-daterange-picker/static/css/main.078dc41c.chunk.css",
-  "main.js": "/react-daterange-picker/static/js/main.a2a3ea46.chunk.js",
-  "main.js.map": "/react-daterange-picker/static/js/main.a2a3ea46.chunk.js.map",
-  "runtime~main.js": "/react-daterange-picker/static/js/runtime~main.4d549cbe.js",
-  "runtime~main.js.map": "/react-daterange-picker/static/js/runtime~main.4d549cbe.js.map",
-  "static/js/2.86843f13.chunk.js": "/react-daterange-picker/static/js/2.86843f13.chunk.js",
-  "static/js/2.86843f13.chunk.js.map": "/react-daterange-picker/static/js/2.86843f13.chunk.js.map",
-  "index.html": "/react-daterange-picker/index.html",
-  "precache-manifest.207b6e27e22cc215ebd437fe3d5be277.js": "/react-daterange-picker/precache-manifest.207b6e27e22cc215ebd437fe3d5be277.js",
-  "service-worker.js": "/react-daterange-picker/service-worker.js",
-  "static/css/main.078dc41c.chunk.css.map": "/react-daterange-picker/static/css/main.078dc41c.chunk.css.map"
+  "files": {
+    "main.css": "/react-material-daterange-picker/static/css/main.2cce8147.chunk.css",
+    "main.js": "/react-material-daterange-picker/static/js/main.614fa0a1.chunk.js",
+    "main.js.map": "/react-material-daterange-picker/static/js/main.614fa0a1.chunk.js.map",
+    "runtime~main.js": "/react-material-daterange-picker/static/js/runtime~main.98ecaef6.js",
+    "runtime~main.js.map": "/react-material-daterange-picker/static/js/runtime~main.98ecaef6.js.map",
+    "static/js/2.3d9abed8.chunk.js": "/react-material-daterange-picker/static/js/2.3d9abed8.chunk.js",
+    "static/js/2.3d9abed8.chunk.js.map": "/react-material-daterange-picker/static/js/2.3d9abed8.chunk.js.map",
+    "index.html": "/react-material-daterange-picker/index.html",
+    "precache-manifest.048f647db816fefb871d7985ac705902.js": "/react-material-daterange-picker/precache-manifest.048f647db816fefb871d7985ac705902.js",
+    "service-worker.js": "/react-material-daterange-picker/service-worker.js",
+    "static/css/main.2cce8147.chunk.css.map": "/react-material-daterange-picker/static/css/main.2cce8147.chunk.css.map"
+  }
 }
