@@ -41,7 +41,7 @@ interface DateRangePickerProps {
 	definedRanges?: DefinedRange[];
 	minDate?: Date | string;
 	maxDate?: Date | string;
-	numberOfMonths?: number | undefined;
+	isSingleMonth?: boolean;
 	onChange: (dateRange: DateRange) => void;
 }
 
@@ -54,7 +54,7 @@ const DateRangePickerImpl: React.FunctionComponent<DateRangePickerProps> = props
 		initialDateRange,
 		minDate,
 		maxDate,
-		numberOfMonths,
+		isSingleMonth = false,
 		definedRanges = defaultRanges
 	} = props;
 
@@ -115,9 +115,6 @@ const DateRangePickerImpl: React.FunctionComponent<DateRangePickerProps> = props
 	/**
 	 * This hanlder will be used when user click on next/prev button
 	 * on the header of month
-	 * We will only show navigator on first and last month
-	 * Incase we show multiple months (for example numberOfMonths === 3),
-	 * we will hide navigator on the other months except first and last month 
 	 * 
 	 * @param  {[Marker]} marker: Marker           [determine what month is focus on]
 	 * @param  {[NavigationAction]} action: NavigationAction [next or prev]
@@ -167,7 +164,7 @@ const DateRangePickerImpl: React.FunctionComponent<DateRangePickerProps> = props
 			dateRange={dateRange}
 			minDate={minDateValid}
 			maxDate={maxDateValid}
-			numberOfMonths={numberOfMonths}
+			isSingleMonth={isSingleMonth}
 			ranges={definedRanges}
 			firstMonth={firstMonth}
 			secondMonth={secondMonth}

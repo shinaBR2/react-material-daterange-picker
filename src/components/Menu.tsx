@@ -9,7 +9,7 @@ import {
 	Theme,
 	withStyles
 } from "@material-ui/core";
-import { format, differenceInCalendarMonths } from "date-fns";
+import { format, differenceInCalendarMonths, isSameMonth } from "date-fns";
 import ArrowRightAlt from "@material-ui/icons/ArrowRightAlt";
 import Month from "./Month";
 import DefinedRanges from "./DefinedRanges";
@@ -36,7 +36,7 @@ interface MenuProps extends WithStyles<typeof styles> {
 	ranges: DefinedRange[];
 	minDate: Date;
 	maxDate: Date;
-	numberOfMonths: number | undefined;
+	isSingleMonth: boolean;
 	firstMonth: Date;
 	secondMonth: Date;
 	setFirstMonth: Setter<Date>;
@@ -59,7 +59,7 @@ const Menu: React.FunctionComponent<MenuProps> = props => {
 		dateRange,
 		minDate,
 		maxDate,
-		numberOfMonths = 1,
+		isSingleMonth,
 		firstMonth,
 		setFirstMonth,
 		secondMonth,
@@ -71,6 +71,23 @@ const Menu: React.FunctionComponent<MenuProps> = props => {
 	const { startDate, endDate } = dateRange;
 	const canNavigateCloser = differenceInCalendarMonths(secondMonth, firstMonth) >= 2;
 	const commonProps = { dateRange, minDate, maxDate, helpers, handlers };
+
+	/**
+	 * From now, we always sure:
+	 * 
+	 * - firstMonth >= minDate
+	 * - secondMonth <= maxDate
+	 */
+	const canGoPrev = !isSameMonth(firstMonth, minDate);
+	const canGoNext = !isSameMonth(secondMonth, maxDate);
+	console.log('isSingleMonth', isSingleMonth);
+	console.log('firstMonth', firstMonth);
+	console.log('secondMonth', secondMonth);
+	console.log('minDate', minDate);
+	console.log('maxDate', maxDate);
+	console.log('canGoPrev', canGoPrev);
+	console.log('canGoNext', canGoNext);
+
 	return (
 		<Paper elevation={5} square>
 			<Grid container direction="row" wrap="nowrap">
@@ -92,28 +109,23 @@ const Menu: React.FunctionComponent<MenuProps> = props => {
 					</Grid>
 					<Divider />
 					<Grid container direction="row" justify="center" wrap="nowrap">
-						{
-							Array.from({length: numberOfMonths}, (v, i) => i + 1).map(m => {
-								const marker = m === 1 ? MARKERS.FIRST_MONTH : (m === numberOfMonths ? MARKERS.SECOND_MONTH : MARKERS.NONE);
-								const showDivider = m < numberOfMonths;
-
-								return (
-									<React.Fragment key={m}>
-										<Month
-											{...commonProps}
-											value={firstMonth}
-											setValue={setFirstMonth}
-											navState={[true, canNavigateCloser]}
-											marker={marker}
-										/>
-										{showDivider && <div className={classes.divider} />}
-									</React.Fragment>
-								);
-							})
-						}
+						<Month
+							{...commonProps}
+							value={firstMonth}
+							setValue={setFirstMonth}
+							navState={isSingleMonth ? [canGoPrev, canGoNext] : [canGoPrev, canNavigateCloser]}
+							marker={isSingleMonth ? MARKERS.NONE : MARKERS.FIRST_MONTH}
+						/>
+						{!isSingleMonth && <div className={classes.divider} />}
+						{!isSingleMonth && <Month
+							{...commonProps}
+							value={firstMonth}
+							setValue={setFirstMonth}
+							navState={[canNavigateCloser, canGoNext]}
+							marker={MARKERS.SECOND_MONTH}
+						/>}
 					</Grid>
 				</Grid>
-				<div className={classes.divider} />
 				<Grid>
 					<DefinedRanges
 						selectedRange={dateRange}
