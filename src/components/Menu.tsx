@@ -86,7 +86,6 @@ const Menu: React.FunctionComponent<MenuProps> = props => {
 			setSecondMonth(newMonth);
 		}
 		console.log('newMonth', newMonth);
-		console.log('\n\n\nEnd of setBothMonth function');
 	};
 
 	/**
