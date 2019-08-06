@@ -73,6 +73,23 @@ const Menu: React.FunctionComponent<MenuProps> = props => {
 	const commonProps = { dateRange, minDate, maxDate, helpers, handlers };
 
 	/**
+	 * In case of isSingleMonth is true
+	 *
+	 * We need to update both firstMonth/secondMonth as well
+	 * at the same time when user change value in the first calendar
+	 */
+	const setBothMonth = (newMonth: Date) => {
+		console.log('\n\n\nsetBothMonth was called');
+		setFirstMonth(newMonth);
+
+		if (isSingleMonth) {
+			setSecondMonth(newMonth);
+		}
+		console.log('newMonth', newMonth);
+		console.log('\n\n\nEnd of setBothMonth function');
+	};
+
+	/**
 	 * From now, we always sure:
 	 * 
 	 * - firstMonth >= minDate
@@ -112,7 +129,7 @@ const Menu: React.FunctionComponent<MenuProps> = props => {
 						<Month
 							{...commonProps}
 							value={firstMonth}
-							setValue={setFirstMonth}
+							setValue={setBothMonth}
 							navState={isSingleMonth ? [canGoPrev, canGoNext] : [canGoPrev, canNavigateCloser]}
 							marker={isSingleMonth ? MARKERS.BOTH : MARKERS.FIRST_MONTH}
 						/>

@@ -71,23 +71,67 @@ const DateRangePickerImpl: React.FunctionComponent<DateRangePickerProps> = props
 	const [dateRange, setDateRange] = React.useState<DateRange>({ ...initialDateRange });
 	const [hoverDay, setHoverDay] = React.useState<Date>();
 	const [firstMonth, setFirstMonth] = React.useState<Date>(intialFirstMonth || today);
+
+	/**
+	 * Logic here:
+	 *
+	 * If isSingleMonth === true, we have only one value for both firstMonth and secondMonth
+	 * Otherwise, we have secondMonth >= firstMonth, default of secondMonth is firstMonth + 1
+	 */
+	const defaultSecondMonth = isSingleMonth ? firstMonth : addMonths(firstMonth, 1);
 	const [secondMonth, setSecondMonth] = React.useState<Date>(
-		initialSecondMonth || addMonths(firstMonth, 1)
+		initialSecondMonth || defaultSecondMonth
 	);
 
 	const { startDate, endDate } = dateRange;
 
 	// handlers
 	const setFirstMonthValidated = (date: Date) => {
-		if (isBefore(date, secondMonth) && isBefore(minDateValid, date)) {
-			setFirstMonth(date);
+		console.log('\n\n\nsetFirstMonthValidated was called');
+		console.log('minDateValid', minDateValid);
+		console.log('minDateValid', date);
+		console.log('isBefore(minDateValid, date)', isBefore(minDateValid, date));
+
+		if (isBefore(minDateValid, date)) {
+			if (isSingleMonth) {
+				if (isBefore(date, maxDateValid)) {
+					setFirstMonth(date);
+				}
+			} else {
+				if (isBefore(date, secondMonth)) {
+					setFirstMonth(date);
+				}
+			}
 		}
+
+		console.log('\n\n\nend of setFirstMonthValidated function');
+		/*if (isBefore(date, secondMonth) && isBefore(minDateValid, date)) {
+			setFirstMonth(date);
+		}*/
 	};
 
 	const setSecondMonthValidated = (date: Date) => {
-		if (isAfter(date, firstMonth) && isAfter(maxDateValid, date)) {
-			setSecondMonth(date);
+		console.log('\n\n\nsetFirstMonthValidated was called');
+		console.log('minDateValid', minDateValid);
+		console.log('minDateValid', date);
+		console.log('isAfter(maxDateValid, date)', isAfter(maxDateValid, date));
+
+		if (isAfter(maxDateValid, date)) {
+			if (isSingleMonth) {
+				if (isAfter(date, minDateValid)) {
+					setSecondMonth(date);
+				}
+			} else {
+				if (isAfter(date, firstMonth)) {
+					setSecondMonth(date);
+				}
+			}
 		}
+		console.log('\n\n\nend of setSecondMonthValidated function');
+
+		/*if (isAfter(date, firstMonth) && isAfter(maxDateValid, date)) {
+			setSecondMonth(date);
+		}*/
 	};
 
 	const setDateRangeValidated = (range: DateRange) => {
@@ -133,15 +177,16 @@ const DateRangePickerImpl: React.FunctionComponent<DateRangePickerProps> = props
 			console.log('secondNew is ', secondNew);
 			if (isBefore(firstMonth, secondNew)) setSecondMonth(secondNew);
 		} else if (marker === MARKERS.BOTH) {
+			/**
+			 * This case happens when isSingleMonth is true
+			 * So we need to set firstMonth and secondMonth new same value
+			 */
 			console.log('marker is MARKERS.BOTH');
 			console.log('action is ', action);
-			if (action === NavigationAction.Previous) {
-				const firstNew = addMonths(firstMonth, action);
-				if (isBefore(firstNew, secondMonth)) setFirstMonth(firstNew);
-			} else {
-				const secondNew = addMonths(secondMonth, action);
-				if (isBefore(firstMonth, secondNew)) setSecondMonth(secondNew);
-			}
+
+			const newMonth = addMonths(firstMonth, action);
+			setFirstMonth(newMonth);
+			setSecondMonth(newMonth);
 		} else {
 			console.log('never go here');
 			return;
