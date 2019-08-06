@@ -20,7 +20,7 @@
 		"start": "tsc --watch",
 		"build": "tsc",
 		"prepublishOnly": "tsc -p ./ --outDir build/",
-		"test": "jest",
+		"test": "jest"
 	},
 	"dependencies": {
 		"@material-ui/core": "^3.9.2",
