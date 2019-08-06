@@ -20,6 +20,7 @@ type Marker = symbol;
 export const MARKERS: { [key: string]: Marker } = {
 	FIRST_MONTH: Symbol("firstMonth"),
 	SECOND_MONTH: Symbol("secondMonth"),
+	BOTH: Symbol("all"),
 	NONE: Symbol('none')
 };
 
@@ -58,8 +59,8 @@ const DateRangePickerImpl: React.FunctionComponent<DateRangePickerProps> = props
 		definedRanges = defaultRanges
 	} = props;
 
-	const minDateValid = parseOptionalDate(minDate, addYears(today, -10));
-	const maxDateValid = parseOptionalDate(maxDate, addYears(today, 10));
+	const minDateValid = parseOptionalDate(minDate, addYears(today, -1));
+	const maxDateValid = parseOptionalDate(maxDate, addYears(today, 1));
 	const [intialFirstMonth, initialSecondMonth] = getValidatedMonths(
 		initialDateRange || {},
 		minDateValid,
@@ -78,13 +79,13 @@ const DateRangePickerImpl: React.FunctionComponent<DateRangePickerProps> = props
 
 	// handlers
 	const setFirstMonthValidated = (date: Date) => {
-		if (isBefore(date, secondMonth)) {
+		if (isBefore(date, secondMonth) && isBefore(minDateValid, date)) {
 			setFirstMonth(date);
 		}
 	};
 
 	const setSecondMonthValidated = (date: Date) => {
-		if (isAfter(date, firstMonth)) {
+		if (isAfter(date, firstMonth) && isAfter(maxDateValid, date)) {
 			setSecondMonth(date);
 		}
 	};
@@ -122,12 +123,27 @@ const DateRangePickerImpl: React.FunctionComponent<DateRangePickerProps> = props
 	 */
 	const onMonthNavigate = (marker: Marker, action: NavigationAction) => {
 		if (marker == MARKERS.FIRST_MONTH) {
+			console.log('marker is MARKERS.FIRST_MONTH');
 			const firstNew = addMonths(firstMonth, action);
+			console.log('firstNew is ', firstNew);
 			if (isBefore(firstNew, secondMonth)) setFirstMonth(firstNew);
 		} else if (marker == MARKERS.SECOND_MONTH) {
+			console.log('marker is MARKERS.SECOND_MONTH');
 			const secondNew = addMonths(secondMonth, action);
+			console.log('secondNew is ', secondNew);
 			if (isBefore(firstMonth, secondNew)) setSecondMonth(secondNew);
+		} else if (marker === MARKERS.BOTH) {
+			console.log('marker is MARKERS.BOTH');
+			console.log('action is ', action);
+			if (action === NavigationAction.Previous) {
+				const firstNew = addMonths(firstMonth, action);
+				if (isBefore(firstNew, secondMonth)) setFirstMonth(firstNew);
+			} else {
+				const secondNew = addMonths(secondMonth, action);
+				if (isBefore(firstMonth, secondNew)) setSecondMonth(secondNew);
+			}
 		} else {
+			console.log('never go here');
 			return;
 		}
 	};

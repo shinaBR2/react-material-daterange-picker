@@ -114,13 +114,13 @@ const Menu: React.FunctionComponent<MenuProps> = props => {
 							value={firstMonth}
 							setValue={setFirstMonth}
 							navState={isSingleMonth ? [canGoPrev, canGoNext] : [canGoPrev, canNavigateCloser]}
-							marker={isSingleMonth ? MARKERS.NONE : MARKERS.FIRST_MONTH}
+							marker={isSingleMonth ? MARKERS.BOTH : MARKERS.FIRST_MONTH}
 						/>
 						{!isSingleMonth && <div className={classes.divider} />}
 						{!isSingleMonth && <Month
 							{...commonProps}
-							value={firstMonth}
-							setValue={setFirstMonth}
+							value={secondMonth}
+							setValue={setSecondMonth}
 							navState={[canNavigateCloser, canGoNext]}
 							marker={MARKERS.SECOND_MONTH}
 						/>}
