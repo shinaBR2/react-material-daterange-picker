@@ -79,13 +79,11 @@ const Menu: React.FunctionComponent<MenuProps> = props => {
 	 * at the same time when user change value in the first calendar
 	 */
 	const setBothMonth = (newMonth: Date) => {
-		console.log('\n\n\nsetBothMonth was called');
 		setFirstMonth(newMonth);
 
 		if (isSingleMonth) {
 			setSecondMonth(newMonth);
 		}
-		console.log('newMonth', newMonth);
 	};
 
 	/**
@@ -96,13 +94,6 @@ const Menu: React.FunctionComponent<MenuProps> = props => {
 	 */
 	const canGoPrev = !isSameMonth(firstMonth, minDate);
 	const canGoNext = !isSameMonth(secondMonth, maxDate);
-	console.log('isSingleMonth', isSingleMonth);
-	console.log('firstMonth', firstMonth);
-	console.log('secondMonth', secondMonth);
-	console.log('minDate', minDate);
-	console.log('maxDate', maxDate);
-	console.log('canGoPrev', canGoPrev);
-	console.log('canGoNext', canGoNext);
 
 	return (
 		<Paper elevation={5} square>

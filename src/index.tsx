@@ -67,7 +67,6 @@ const DateRangePickerImpl: React.FunctionComponent<DateRangePickerProps> = props
 		maxDateValid
 	);
 
-	// console.log("rendering DateRangePicker");
 	const [dateRange, setDateRange] = React.useState<DateRange>({ ...initialDateRange });
 	const [hoverDay, setHoverDay] = React.useState<Date>();
 	const [firstMonth, setFirstMonth] = React.useState<Date>(intialFirstMonth || today);
@@ -87,11 +86,6 @@ const DateRangePickerImpl: React.FunctionComponent<DateRangePickerProps> = props
 
 	// handlers
 	const setFirstMonthValidated = (date: Date) => {
-		console.log('\n\n\nsetFirstMonthValidated was called');
-		console.log('minDateValid', minDateValid);
-		console.log('minDateValid', date);
-		console.log('isBefore(minDateValid, date)', isBefore(minDateValid, date));
-
 		if (isBefore(minDateValid, date)) {
 			if (isSingleMonth) {
 				if (isBefore(date, maxDateValid)) {
@@ -104,18 +98,12 @@ const DateRangePickerImpl: React.FunctionComponent<DateRangePickerProps> = props
 			}
 		}
 
-		console.log('\n\n\nend of setFirstMonthValidated function');
 		/*if (isBefore(date, secondMonth) && isBefore(minDateValid, date)) {
 			setFirstMonth(date);
 		}*/
 	};
 
 	const setSecondMonthValidated = (date: Date) => {
-		console.log('\n\n\nsetFirstMonthValidated was called');
-		console.log('minDateValid', minDateValid);
-		console.log('minDateValid', date);
-		console.log('isAfter(maxDateValid, date)', isAfter(maxDateValid, date));
-
 		if (isAfter(maxDateValid, date)) {
 			if (isSingleMonth) {
 				if (isAfter(date, minDateValid)) {
@@ -127,7 +115,6 @@ const DateRangePickerImpl: React.FunctionComponent<DateRangePickerProps> = props
 				}
 			}
 		}
-		console.log('\n\n\nend of setSecondMonthValidated function');
 
 		/*if (isAfter(date, firstMonth) && isAfter(maxDateValid, date)) {
 			setSecondMonth(date);
@@ -167,28 +154,21 @@ const DateRangePickerImpl: React.FunctionComponent<DateRangePickerProps> = props
 	 */
 	const onMonthNavigate = (marker: Marker, action: NavigationAction) => {
 		if (marker == MARKERS.FIRST_MONTH) {
-			console.log('marker is MARKERS.FIRST_MONTH');
 			const firstNew = addMonths(firstMonth, action);
-			console.log('firstNew is ', firstNew);
 			if (isBefore(firstNew, secondMonth)) setFirstMonth(firstNew);
 		} else if (marker == MARKERS.SECOND_MONTH) {
-			console.log('marker is MARKERS.SECOND_MONTH');
 			const secondNew = addMonths(secondMonth, action);
-			console.log('secondNew is ', secondNew);
 			if (isBefore(firstMonth, secondNew)) setSecondMonth(secondNew);
 		} else if (marker === MARKERS.BOTH) {
 			/**
 			 * This case happens when isSingleMonth is true
 			 * So we need to set firstMonth and secondMonth new same value
 			 */
-			console.log('marker is MARKERS.BOTH');
-			console.log('action is ', action);
 
 			const newMonth = addMonths(firstMonth, action);
 			setFirstMonth(newMonth);
 			setSecondMonth(newMonth);
 		} else {
-			console.log('never go here');
 			return;
 		}
 	};
