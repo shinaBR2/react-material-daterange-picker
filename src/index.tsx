@@ -19,7 +19,9 @@ type Marker = symbol;
 
 export const MARKERS: { [key: string]: Marker } = {
 	FIRST_MONTH: Symbol("firstMonth"),
-	SECOND_MONTH: Symbol("secondMonth")
+	SECOND_MONTH: Symbol("secondMonth"),
+	BOTH: Symbol("all"),
+	NONE: Symbol('none')
 };
 
 const getValidatedMonths = (range: DateRange, minDate: Date, maxDate: Date) => {
@@ -40,6 +42,7 @@ interface DateRangePickerProps {
 	definedRanges?: DefinedRange[];
 	minDate?: Date | string;
 	maxDate?: Date | string;
+	isSingleMonth?: boolean;
 	onChange: (dateRange: DateRange) => void;
 }
 
@@ -52,38 +55,70 @@ const DateRangePickerImpl: React.FunctionComponent<DateRangePickerProps> = props
 		initialDateRange,
 		minDate,
 		maxDate,
+		isSingleMonth = false,
 		definedRanges = defaultRanges
 	} = props;
 
-	const minDateValid = parseOptionalDate(minDate, addYears(today, -10));
-	const maxDateValid = parseOptionalDate(maxDate, addYears(today, 10));
+	const minDateValid = parseOptionalDate(minDate, addYears(today, -1));
+	const maxDateValid = parseOptionalDate(maxDate, addYears(today, 1));
 	const [intialFirstMonth, initialSecondMonth] = getValidatedMonths(
 		initialDateRange || {},
 		minDateValid,
 		maxDateValid
 	);
 
-	// console.log("rendering DateRangePicker");
 	const [dateRange, setDateRange] = React.useState<DateRange>({ ...initialDateRange });
 	const [hoverDay, setHoverDay] = React.useState<Date>();
 	const [firstMonth, setFirstMonth] = React.useState<Date>(intialFirstMonth || today);
+
+	/**
+	 * Logic here:
+	 *
+	 * If isSingleMonth === true, we have only one value for both firstMonth and secondMonth
+	 * Otherwise, we have secondMonth >= firstMonth, default of secondMonth is firstMonth + 1
+	 */
+	const defaultSecondMonth = isSingleMonth ? firstMonth : addMonths(firstMonth, 1);
 	const [secondMonth, setSecondMonth] = React.useState<Date>(
-		initialSecondMonth || addMonths(firstMonth, 1)
+		initialSecondMonth || defaultSecondMonth
 	);
 
 	const { startDate, endDate } = dateRange;
 
 	// handlers
 	const setFirstMonthValidated = (date: Date) => {
-		if (isBefore(date, secondMonth)) {
-			setFirstMonth(date);
+		if (isBefore(minDateValid, date)) {
+			if (isSingleMonth) {
+				if (isBefore(date, maxDateValid)) {
+					setFirstMonth(date);
+				}
+			} else {
+				if (isBefore(date, secondMonth)) {
+					setFirstMonth(date);
+				}
+			}
 		}
+
+		/*if (isBefore(date, secondMonth) && isBefore(minDateValid, date)) {
+			setFirstMonth(date);
+		}*/
 	};
 
 	const setSecondMonthValidated = (date: Date) => {
-		if (isAfter(date, firstMonth)) {
-			setSecondMonth(date);
+		if (isAfter(maxDateValid, date)) {
+			if (isSingleMonth) {
+				if (isAfter(date, minDateValid)) {
+					setSecondMonth(date);
+				}
+			} else {
+				if (isAfter(date, firstMonth)) {
+					setSecondMonth(date);
+				}
+			}
 		}
+
+		/*if (isAfter(date, firstMonth) && isAfter(maxDateValid, date)) {
+			setSecondMonth(date);
+		}*/
 	};
 
 	const setDateRangeValidated = (range: DateRange) => {
@@ -109,13 +144,32 @@ const DateRangePickerImpl: React.FunctionComponent<DateRangePickerProps> = props
 		setHoverDay(day);
 	};
 
+	/**
+	 * This hanlder will be used when user click on next/prev button
+	 * on the header of month
+	 * 
+	 * @param  {[Marker]} marker: Marker           [determine what month is focus on]
+	 * @param  {[NavigationAction]} action: NavigationAction [next or prev]
+	 * @return {[void]}
+	 */
 	const onMonthNavigate = (marker: Marker, action: NavigationAction) => {
 		if (marker == MARKERS.FIRST_MONTH) {
 			const firstNew = addMonths(firstMonth, action);
 			if (isBefore(firstNew, secondMonth)) setFirstMonth(firstNew);
-		} else {
+		} else if (marker == MARKERS.SECOND_MONTH) {
 			const secondNew = addMonths(secondMonth, action);
 			if (isBefore(firstMonth, secondNew)) setSecondMonth(secondNew);
+		} else if (marker === MARKERS.BOTH) {
+			/**
+			 * This case happens when isSingleMonth is true
+			 * So we need to set firstMonth and secondMonth new same value
+			 */
+
+			const newMonth = addMonths(firstMonth, action);
+			setFirstMonth(newMonth);
+			setSecondMonth(newMonth);
+		} else {
+			return;
 		}
 	};
 
@@ -151,6 +205,7 @@ const DateRangePickerImpl: React.FunctionComponent<DateRangePickerProps> = props
 			dateRange={dateRange}
 			minDate={minDateValid}
 			maxDate={maxDateValid}
+			isSingleMonth={isSingleMonth}
 			ranges={definedRanges}
 			firstMonth={firstMonth}
 			secondMonth={secondMonth}

@@ -9,7 +9,7 @@ import {
 	Theme,
 	withStyles
 } from "@material-ui/core";
-import { format, differenceInCalendarMonths } from "date-fns";
+import { format, differenceInCalendarMonths, isSameMonth } from "date-fns";
 import ArrowRightAlt from "@material-ui/icons/ArrowRightAlt";
 import Month from "./Month";
 import DefinedRanges from "./DefinedRanges";
@@ -36,6 +36,7 @@ interface MenuProps extends WithStyles<typeof styles> {
 	ranges: DefinedRange[];
 	minDate: Date;
 	maxDate: Date;
+	isSingleMonth: boolean;
 	firstMonth: Date;
 	secondMonth: Date;
 	setFirstMonth: Setter<Date>;
@@ -58,6 +59,7 @@ const Menu: React.FunctionComponent<MenuProps> = props => {
 		dateRange,
 		minDate,
 		maxDate,
+		isSingleMonth,
 		firstMonth,
 		setFirstMonth,
 		secondMonth,
@@ -69,6 +71,30 @@ const Menu: React.FunctionComponent<MenuProps> = props => {
 	const { startDate, endDate } = dateRange;
 	const canNavigateCloser = differenceInCalendarMonths(secondMonth, firstMonth) >= 2;
 	const commonProps = { dateRange, minDate, maxDate, helpers, handlers };
+
+	/**
+	 * In case of isSingleMonth is true
+	 *
+	 * We need to update both firstMonth/secondMonth as well
+	 * at the same time when user change value in the first calendar
+	 */
+	const setBothMonth = (newMonth: Date) => {
+		setFirstMonth(newMonth);
+
+		if (isSingleMonth) {
+			setSecondMonth(newMonth);
+		}
+	};
+
+	/**
+	 * From now, we always sure:
+	 * 
+	 * - firstMonth >= minDate
+	 * - secondMonth <= maxDate
+	 */
+	const canGoPrev = !isSameMonth(firstMonth, minDate);
+	const canGoNext = !isSameMonth(secondMonth, maxDate);
+
 	return (
 		<Paper elevation={5} square>
 			<Grid container direction="row" wrap="nowrap">
@@ -93,21 +119,20 @@ const Menu: React.FunctionComponent<MenuProps> = props => {
 						<Month
 							{...commonProps}
 							value={firstMonth}
-							setValue={setFirstMonth}
-							navState={[true, canNavigateCloser]}
-							marker={MARKERS.FIRST_MONTH}
+							setValue={setBothMonth}
+							navState={isSingleMonth ? [canGoPrev, canGoNext] : [canGoPrev, canNavigateCloser]}
+							marker={isSingleMonth ? MARKERS.BOTH : MARKERS.FIRST_MONTH}
 						/>
-						<div className={classes.divider} />
-						<Month
+						{!isSingleMonth && <div className={classes.divider} />}
+						{!isSingleMonth && <Month
 							{...commonProps}
 							value={secondMonth}
 							setValue={setSecondMonth}
-							navState={[canNavigateCloser, true]}
+							navState={[canNavigateCloser, canGoNext]}
 							marker={MARKERS.SECOND_MONTH}
-						/>
+						/>}
 					</Grid>
 				</Grid>
-				<div className={classes.divider} />
 				<Grid>
 					<DefinedRanges
 						selectedRange={dateRange}
