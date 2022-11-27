@@ -1,4 +1,7 @@
 # react-daterange-picker 
+
+See [this issue](https://github.com/vascofg/react-admin-date-inputs/issues/42) first.
+
 A react date range picker using material-ui components.
 
 <a href='https://www.npmjs.com/package/@shinabr2/react-material-daterange-picker'>
